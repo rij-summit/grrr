@@ -105,13 +105,34 @@ const question = document.getElementById("question");
 
 let noCount = 0;
 
-// Random teleport for No button
 function moveButton() {
-    const maxX = window.innerWidth - noBtn.offsetWidth - 20; // padding
+    const maxX = window.innerWidth - noBtn.offsetWidth - 20;
     const maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
-    noBtn.style.left = Math.max(10, Math.random() * maxX) + "px";
-    noBtn.style.top = Math.max(10, Math.random() * maxY) + "px";
+    let newX, newY;
+    let overlap = true;
+
+    // Keep trying until the No button is not overlapping Yes
+    while (overlap) {
+        newX = Math.max(10, Math.random() * maxX);
+        newY = Math.max(10, Math.random() * maxY);
+
+        const yesRect = yesBtn.getBoundingClientRect();
+        const buffer = 80; // minimum distance between buttons
+
+        // Check if new position overlaps with Yes button
+        if (
+            newX + noBtn.offsetWidth < yesRect.left - buffer ||
+            newX > yesRect.right + buffer ||
+            newY + noBtn.offsetHeight < yesRect.top - buffer ||
+            newY > yesRect.bottom + buffer
+        ) {
+            overlap = false;
+        }
+    }
+
+    noBtn.style.left = newX + "px";
+    noBtn.style.top = newY + "px";
 }
 
 noBtn.addEventListener("mouseover", moveButton);
@@ -130,7 +151,7 @@ yesBtn.addEventListener("click", function() {
     setTimeout(() => {
         document.body.innerHTML = `
             <div class="message">
-                ❤️ Happy Valentine's Day my bebesaurrr❤️ <br><br>
+                ❤️ Happy Valentine's Day ❤️ <br><br>
                 I love you 💕
             </div>
         `;
@@ -166,5 +187,7 @@ function createConfetti() {
 }
 </script>
 
+
 </body>
 </html>
+
