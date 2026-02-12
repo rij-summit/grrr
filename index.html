@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Do You Love Me? ❤️</title>
-
 <style>
-body {
+  body {
     margin: 0;
     height: 100vh;
     overflow: hidden;
@@ -18,166 +17,149 @@ body {
     align-items: center;
     text-align: center;
     color: white;
-}
-
-h1 {
+  }
+  h1 {
     font-size: 26px;
     padding: 20px;
-}
-
-.buttons { position: relative; display: flex; justify-content: center; align-items: center; gap: 20px; }
-
-button {
+  }
+  .buttons {
+    display: flex;
+    gap: 20px;
+    position: relative; /* important for absolute positioning inside */
+    flex-wrap: wrap; /* allows buttons to stack on small screens */
+    justify-content: center;
+  }
+  button {
     padding: 15px 30px;
     font-size: 18px;
     border: none;
     border-radius: 12px;
     cursor: pointer;
     transition: 0.2s;
-    max-width: 90vw; /* prevent overflow on small screens */
-}
-
-#yesBtn { background-color: #ff2e63; color: white; position: relative; /* stays in flex layout */ }
-
-#noBtn { background-color: #333; color: white; position: absolute; left: 60%; /* start offset to the right */ top: 0; /* aligned with Yes button vertically */ }
-
-.message {
+    max-width: 90vw;
+  }
+  #yesBtn {
+    background-color: #ff2e63;
+    color: white;
+  }
+  #noBtn {
+    background-color: #333;
+    color: white;
+    position: absolute; /* position inside container, will be set dynamically */
+  }
+  .message {
     font-size: 30px;
     animation: fadeIn 1s ease forwards;
-}
-
-@keyframes fadeIn {
+  }
+  @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.8); }
     to { opacity: 1; transform: scale(1); }
-}
-
-.heart {
+  }
+  .heart {
     position: absolute;
     font-size: 24px;
     animation: floatUp 4s linear infinite;
-}
-
-@keyframes floatUp {
+  }
+  @keyframes floatUp {
     0% { transform: translateY(0); opacity: 1; }
     100% { transform: translateY(-100vh); opacity: 0; }
-}
-
-.confetti {
+  }
+  .confetti {
     position: absolute;
     width: 8px;
     height: 8px;
     animation: fall 3s linear forwards;
-}
-
-@keyframes fall {
+  }
+  @keyframes fall {
     0% { transform: translateY(-100px) rotate(0deg); }
     100% { transform: translateY(100vh) rotate(720deg); }
-}
+  }
 </style>
 </head>
-
 <body>
-
 <h1 id="question">Do you love me?</h1>
-
 <div class="buttons">
-    <button id="yesBtn">Yes ❤️</button>
-    <button id="noBtn">No 💔</button>
+  <button id="yesBtn">Yes ❤️</button>
+  <button id="noBtn">No 💔</button>
 </div>
 
 <script>
-window.addEventListener("load", () => { const maxX = window.innerWidth - noBtn.offsetWidth - 20; const maxY = window.innerHeight - noBtn.offsetHeight - 20; noBtn.style.left = Math.min(maxX, window.innerWidth * 0.6) + "px"; noBtn.style.top = Math.min(maxY, window.innerHeight * 0.5) + "px"; });
-
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const question = document.getElementById("question");
+const buttonsContainer = document.querySelector('.buttons');
 
 let noCount = 0;
 
+// Function to move No button within the container
 function moveButton() {
-    const maxX = window.innerWidth - noBtn.offsetWidth - 20;
-    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+  const containerWidth = buttonsContainer.offsetWidth;
+  const containerHeight = buttonsContainer.offsetHeight;
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
 
-    let newX, newY;
-    let overlap = true;
+  const maxX = containerWidth - btnWidth;
+  const maxY = containerHeight - btnHeight;
 
-    // Keep trying until the No button is not overlapping Yes
-    while (overlap) {
-        newX = Math.max(10, Math.random() * maxX);
-        newY = Math.max(10, Math.random() * maxY);
+  const randX = Math.random() * maxX;
+  const randY = Math.random() * maxY;
 
-        const yesRect = yesBtn.getBoundingClientRect();
-        const buffer = 80; // minimum distance between buttons
-
-        // Check if new position overlaps with Yes button
-        if (
-            newX + noBtn.offsetWidth < yesRect.left - buffer ||
-            newX > yesRect.right + buffer ||
-            newY + noBtn.offsetHeight < yesRect.top - buffer ||
-            newY > yesRect.bottom + buffer
-        ) {
-            overlap = false;
-        }
-    }
-
-    noBtn.style.left = newX + "px";
-    noBtn.style.top = newY + "px";
+  noBtn.style.left = randX + 'px';
+  noBtn.style.top = randY + 'px';
 }
+
+// Initialize position of No button
+moveButton();
+
+// Optional: reposition on window resize
+window.addEventListener('resize', moveButton);
 
 noBtn.addEventListener("mouseover", moveButton);
 noBtn.addEventListener("touchstart", moveButton);
 
 noBtn.addEventListener("click", function() {
-    noCount++;
-    if (noCount >= 7) {
-        question.innerHTML = "Why no!!? You love me :>";
-    }
+  noCount++;
+  if (noCount >= 7) {
+    question.innerHTML = "Why no!!? You love me :>";
+  }
 });
 
 yesBtn.addEventListener("click", function() {
-    document.body.innerHTML = `<div class="message">I knew it 😌</div>`;
-    
-    setTimeout(() => {
-        document.body.innerHTML = `
-            <div class="message">
-                ❤️ Happy Valentine's Day ❤️ <br><br>
-                I love you 💕
-            </div>
-        `;
-        createHearts();
-        createConfetti();
-    }, 1500);
+  document.body.innerHTML = `<div class="message">I knew it 😌</div>`;
+  setTimeout(() => {
+    document.body.innerHTML = `
+      <div class="message">
+        ❤️ Happy Valentine's Day my bebesaurrr❤️ <br><br>
+        I love you 💕
+      </div>
+    `;
+    createHearts();
+    createConfetti();
+  }, 1500);
 });
 
 function createHearts() {
-    setInterval(() => {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * window.innerWidth + "px";
-        heart.style.bottom = "0px";
-        document.body.appendChild(heart);
-
-        setTimeout(() => heart.remove(), 4000);
-    }, 300);
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.bottom = "0px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+  }, 300);
 }
 
 function createConfetti() {
-    for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement("div");
-        confetti.classList.add("confetti");
-        confetti.style.left = Math.random() * window.innerWidth + "px";
-        confetti.style.backgroundColor =
-            `hsl(${Math.random() * 360}, 100%, 50%)`;
-        document.body.appendChild(confetti);
-
-        setTimeout(() => confetti.remove(), 3000);
-    }
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.style.left = Math.random() * window.innerWidth + "px";
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 3000);
+  }
 }
 </script>
-
-
 </body>
 </html>
-
-
