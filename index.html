@@ -25,13 +25,7 @@ h1 {
     padding: 20px;
 }
 
-.buttons {
-    display: flex;
-    gap: 20px;
-    position: relative;
-    flex-wrap: wrap; /* allows buttons to stack on small screens */
-    justify-content: center;
-}
+.buttons { position: relative; display: flex; justify-content: center; align-items: center; gap: 20px; }
 
 button {
     padding: 15px 30px;
@@ -43,16 +37,9 @@ button {
     max-width: 90vw; /* prevent overflow on small screens */
 }
 
-#yesBtn {
-    background-color: #ff2e63;
-    color: white;
-}
+#yesBtn { background-color: #ff2e63; color: white; position: relative; /* stays in flex layout */ }
 
-#noBtn {
-    background-color: #333;
-    color: white;
-    position: absolute;
-}
+#noBtn { background-color: #333; color: white; position: absolute; left: 60%; /* start offset to the right */ top: 0; /* aligned with Yes button vertically */ }
 
 .message {
     font-size: 30px;
@@ -99,6 +86,8 @@ button {
 </div>
 
 <script>
+window.addEventListener("load", () => { const maxX = window.innerWidth - noBtn.offsetWidth - 20; const maxY = window.innerHeight - noBtn.offsetHeight - 20; noBtn.style.left = Math.min(maxX, window.innerWidth * 0.6) + "px"; noBtn.style.top = Math.min(maxY, window.innerHeight * 0.5) + "px"; });
+
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const question = document.getElementById("question");
@@ -190,4 +179,5 @@ function createConfetti() {
 
 </body>
 </html>
+
 
